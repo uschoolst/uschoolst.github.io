@@ -1,4 +1,4 @@
-alert("呼籲各位這邊有一位不友善的同學在嘗試注入一些東西 看到一些奇怪的東西請先忽略 開發人員正在嘗試解決")
+alert("呼籲各位這邊有一位同學在嘗試注入一些東西 看到一些奇怪的東西請先忽略 開發人員正在嘗試解決")
 
 const BOOKS = ['馭風書院', '矽晶書院', '曦華書院', '靛織書院'];
 const BOOK_COLOR = {
@@ -133,7 +133,7 @@ let submissions = null;
 let selectedBook = null;
 
 // 🔗 請務必確認 Apps Script 部署 URL 與 API Key 一致
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2rx9NMmQqqkuLvJvBPdaHKffrFhOQXV2dlsqyCfDb7d6PPk5-duSgL4_7VxX9Ckq_/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzl7m7Ocj31KjUiwSWkj73oOc9dZvySHg0N4El63GBOa0ZKjPbBaNMiq-xrAiNy0zl0/exec';
 const API_KEY = 'u11501066';
 
 async function loadAll() {
