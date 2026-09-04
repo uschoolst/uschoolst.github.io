@@ -1,3 +1,5 @@
+alert("網站正在修改中")
+
 const BOOKS = ['馭風書院','矽晶書院','曦華書院','靛織書院'];
 const BOOK_COLOR = {
   '馭風書院':'var(--book-wind)',
