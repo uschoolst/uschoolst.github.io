@@ -89,9 +89,13 @@ const RATING_LABEL = {};
 RATINGS.forEach(r=>RATING_LABEL[r.value]=r.label);
 
 function buildRoster(){
-  const counts = { '馭風書院':21, '矽晶書院':21, '曦華書院':20, '靛織書院':20 };
-  const roster = {};
-  BOOKS.forEach(book=>{
+  const counts = { '矽晶書院':21, '曦華書院':20, '靛織書院':20 };
+  const roster = {
+    '馭風書院': ['馭風固定員'] // 👈 在這裡填入馭風書院的固定人員姓名或編號
+  };
+  
+  // 只針對其他三個書院動態產生名冊
+  ['矽晶書院', '曦華書院', '靛織書院'].forEach(book => {
     const n = counts[book];
     roster[book] = Array.from({length:n}, (_,i)=> book.slice(0,2) + String(i+1).padStart(2,'0'));
   });
@@ -129,18 +133,25 @@ let checklistData = null;
 let submissions = null;
 let selectedBook = null;
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPh4T_EH-xYxmMSNz4T-rShsQwbeEUA8EQ9NpGGig-j7YMCBn2StSJINVzycyOtXqj/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0LAXu9Kqg9GAwCjm2U_wMkpeB8mNp-deenaZ95RABFbK8O5RFUd8IYyedwGItMR7v/exec';
 
 async function loadAll(){
   tasksData = DEFAULT_TASKS;
   const kv = await fetchDump();
 
   inspectorData = kv['inspectors:'+WKEY] ? JSON.parse(kv['inspectors:'+WKEY]) : null;
-  if(!inspectorData){
-    inspectorData = {};
-    BOOKS.forEach(book=>{ inspectorData[book] = pick(ROSTER[book]); });
-    await saveJSON('inspectors:'+WKEY, inspectorData);
-  }
+  // 在 loadAll() 函式裡面找到這段並替換：
+if(!inspectorData){
+  inspectorData = {};
+  BOOKS.forEach(book => {
+    if (book === '馭風書院') {
+      inspectorData[book] = ROSTER['馭風書院'][0]; // 👈 固定選擇陣列的第一位
+    } else {
+      inspectorData[book] = pick(ROSTER[book]); // 其他書院隨機抽取
+    }
+  });
+  await saveJSON('inspectors:'+WKEY, inspectorData);
+}
   checklistData = kv['checklist:'+DKEY] ? JSON.parse(kv['checklist:'+DKEY]) : {};
   submissions = kv['submissions:'+DKEY] ? JSON.parse(kv['submissions:'+DKEY]) : {};
 }
@@ -581,7 +592,15 @@ async function renderWeeklyMatrix() {
 
 document.getElementById('reroll-btn').addEventListener('click', async ()=>{
   if(!confirm('確定要重新抽選本週清潔工嗎？這會覆蓋目前的名單。')) return;
-  BOOKS.forEach(book=>{ inspectorData[book] = pick(ROSTER[book]); });
+  
+  BOOKS.forEach(book => {
+    if (book === '馭風書院') {
+      inspectorData[book] = ROSTER['馭風書院'][0]; // 👈 維持固定人員
+    } else {
+      inspectorData[book] = pick(ROSTER[book]); // 其他書院重新抽選
+    }
+  });
+  
   await saveJSON('inspectors:'+WKEY, inspectorData);
   render();
 });
