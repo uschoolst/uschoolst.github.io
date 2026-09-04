@@ -1,4 +1,4 @@
-alert("網站正在修改中")
+alert("網站正在修改中");
 
 const BOOKS = ['馭風書院','矽晶書院','曦華書院','靛織書院'];
 const BOOK_COLOR = {
@@ -91,10 +91,9 @@ RATINGS.forEach(r=>RATING_LABEL[r.value]=r.label);
 function buildRoster(){
   const counts = { '矽晶書院':21, '曦華書院':20, '靛織書院':20 };
   const roster = {
-    '馭風書院': ['馭風固定員'] // 👈 在這裡填入馭風書院的固定人員姓名或編號
+    '馭風書院': ['馭風固定員'] // 可自行修改固定名單
   };
   
-  // 只針對其他三個書院動態產生名冊
   ['矽晶書院', '曦華書院', '靛織書院'].forEach(book => {
     const n = counts[book];
     roster[book] = Array.from({length:n}, (_,i)=> book.slice(0,2) + String(i+1).padStart(2,'0'));
@@ -133,25 +132,25 @@ let checklistData = null;
 let submissions = null;
 let selectedBook = null;
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz0LAXu9Kqg9GAwCjm2U_wMkpeB8mNp-deenaZ95RABFbK8O5RFUd8IYyedwGItMR7v/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoBktOhHu78xxS67dHFDTyM3pVUAsvbV-6F4xARQnLG-oUkMmnFHg1l4PUk96qA0S6/exec';
+const API_KEY = 'u11501021';
 
 async function loadAll(){
   tasksData = DEFAULT_TASKS;
   const kv = await fetchDump();
 
   inspectorData = kv['inspectors:'+WKEY] ? JSON.parse(kv['inspectors:'+WKEY]) : null;
-  // 在 loadAll() 函式裡面找到這段並替換：
-if(!inspectorData){
-  inspectorData = {};
-  BOOKS.forEach(book => {
-    if (book === '馭風書院') {
-      inspectorData[book] = ROSTER['馭風書院'][0]; // 👈 固定選擇陣列的第一位
-    } else {
-      inspectorData[book] = pick(ROSTER[book]); // 其他書院隨機抽取
-    }
-  });
-  await saveJSON('inspectors:'+WKEY, inspectorData);
-}
+  if(!inspectorData){
+    inspectorData = {};
+    BOOKS.forEach(book => {
+      if (book === '馭風書院') {
+        inspectorData[book] = ROSTER['馭風書院'][0];
+      } else {
+        inspectorData[book] = pick(ROSTER[book]);
+      }
+    });
+    await saveJSON('inspectors:'+WKEY, inspectorData);
+  }
   checklistData = kv['checklist:'+DKEY] ? JSON.parse(kv['checklist:'+DKEY]) : {};
   submissions = kv['submissions:'+DKEY] ? JSON.parse(kv['submissions:'+DKEY]) : {};
 }
@@ -174,7 +173,12 @@ async function saveJSON(key, obj){
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action:'set', key: key, value: JSON.stringify(obj) })
+      body: JSON.stringify({ 
+        apiKey: API_KEY, // 👈 新增此欄位供後端驗證
+        action: 'set', 
+        key: key, 
+        value: JSON.stringify(obj) 
+      })
     });
   }catch(e){
     console.error('save error', key, e);
@@ -239,32 +243,55 @@ function switchTab(tabName) {
 
 function renderWhoBox(){
   const el = document.getElementById('who-box');
+  el.innerHTML = '';
+
   if(!selectedBook){
-    el.innerHTML = `
-      <label>請問您的書院為何？</label>
-      <button class="select-trigger placeholder" id="book-trigger" type="button">
-        <span>請選擇書院</span>
-        <span class="trigger-arrow"></span>
-      </button>
-    `;
-    document.getElementById('book-trigger').addEventListener('click', ()=>{
+    const label = document.createElement('label');
+    label.textContent = '請問您的書院為何？';
+    
+    const btn = document.createElement('button');
+    btn.className = 'select-trigger placeholder';
+    btn.id = 'book-trigger';
+    btn.type = 'button';
+    btn.innerHTML = '<span>請選擇書院</span><span class="trigger-arrow"></span>';
+    btn.addEventListener('click', ()=>{
       openSheet('請選擇書院', BOOKS.map(b=>({value:b,label:b})), selectedBook, (val)=>{
         selectedBook = val;
         render();
       });
     });
-  }else{
+
+    el.appendChild(label);
+    el.appendChild(btn);
+  } else {
     const floors = floorsForBook(selectedBook).join('、');
-    el.innerHTML = `
-      <div class="who-current">
-        <div class="info">您的書院：<b>${selectedBook}</b>（負責 ${floors}）<br>本週清潔工：${inspectorData[selectedBook]}</div>
-        <button class="swap-btn" id="swap-book-btn" type="button">更換書院</button>
-      </div>
-    `;
-    document.getElementById('swap-book-btn').addEventListener('click', ()=>{
+    
+    const container = document.createElement('div');
+    container.className = 'who-current';
+
+    const info = document.createElement('div');
+    info.className = 'info';
+    info.append('您的書院：');
+    const b = document.createElement('b');
+    b.textContent = selectedBook;
+    info.append(b, `（負責 ${floors}）`, document.createElement('br'), '本週清潔工：');
+    
+    const inspectorSpan = document.createElement('span');
+    inspectorSpan.textContent = inspectorData[selectedBook] || '未定';
+    info.append(inspectorSpan);
+
+    const swapBtn = document.createElement('button');
+    swapBtn.className = 'swap-btn';
+    swapBtn.type = 'button';
+    swapBtn.textContent = '更換書院';
+    swapBtn.addEventListener('click', ()=>{
       selectedBook = null;
       render();
     });
+
+    container.appendChild(info);
+    container.appendChild(swapBtn);
+    el.appendChild(container);
   }
 }
 
@@ -276,11 +303,24 @@ function render(){
 
   const stripEl = document.getElementById('roster-strip');
   stripEl.innerHTML = '';
-  BOOKS.forEach(book=>{
+  BOOKS.forEach(book => {
     const chip = document.createElement('div');
     chip.className = 'roster-chip';
-    chip.innerHTML = `<span class="swatch" style="background:${BOOK_COLOR[book]}"></span>
-      <b>${book}</b><span class="who">${inspectorData[book]}</span>`;
+
+    const swatch = document.createElement('span');
+    swatch.className = 'swatch';
+    swatch.style.background = BOOK_COLOR[book];
+
+    const b = document.createElement('b');
+    b.textContent = book;
+
+    const who = document.createElement('span');
+    who.className = 'who';
+    who.textContent = inspectorData[book] || '';
+
+    chip.appendChild(swatch);
+    chip.appendChild(b);
+    chip.appendChild(who);
     stripEl.appendChild(chip);
   });
 
@@ -311,32 +351,84 @@ function render(){
     const card = document.createElement('div');
     card.className = 'floor';
 
-    card.innerHTML = `
-      <div class="floor-head">
-        <div class="floor-num">${floor}</div>
-        <div class="floor-meta">
-          <div class="tags">
-            <span class="book-tag" style="background:${BOOK_COLOR[selectedBook]}"><span class="swatch"></span>${selectedBook}</span>
-          </div>
-          <div class="progress-line"><strong>${doneCount}</strong> / ${items.length} 項達到合格以上</div>
-        </div>
-      </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="task-list">
-        ${items.map(item=>{
-          const v = checklistData[taskId(floor,item.label)] || '';
-          const levelClass = v ? 'level-'+v : '';
-          const triggerLabel = v ? RATING_LABEL[v] : '尚未檢查';
-          return `<div class="task-row ${levelClass}" data-floor="${floor}" data-label="${item.label}">
-            <div class="label">${item.label}</div>
-            <button class="rate-trigger" type="button">
-              <span>${triggerLabel}</span>
-              <span class="trigger-arrow"></span>
-            </button>
-          </div>`;
-        }).join('')}
-      </div>
-    `;
+    const head = document.createElement('div');
+    head.className = 'floor-head';
+
+    const num = document.createElement('div');
+    num.className = 'floor-num';
+    num.textContent = floor;
+
+    const meta = document.createElement('div');
+    meta.className = 'floor-meta';
+
+    const tags = document.createElement('div');
+    tags.className = 'tags';
+
+    const tag = document.createElement('span');
+    tag.className = 'book-tag';
+    tag.style.background = BOOK_COLOR[selectedBook];
+
+    const swatch = document.createElement('span');
+    swatch.className = 'swatch';
+    tag.appendChild(swatch);
+    tag.append(selectedBook);
+    tags.appendChild(tag);
+
+    const progLine = document.createElement('div');
+    progLine.className = 'progress-line';
+    
+    const strong = document.createElement('strong');
+    strong.textContent = doneCount;
+    progLine.append(strong, ` / ${items.length} 項達到合格以上`);
+
+    meta.appendChild(tags);
+    meta.appendChild(progLine);
+    head.appendChild(num);
+    head.appendChild(meta);
+
+    const track = document.createElement('div');
+    track.className = 'progress-track';
+    const fill = document.createElement('div');
+    fill.className = 'progress-fill';
+    fill.style.width = pct + '%';
+    track.appendChild(fill);
+
+    const taskList = document.createElement('div');
+    taskList.className = 'task-list';
+
+    items.forEach(item=>{
+      const v = checklistData[taskId(floor,item.label)] || '';
+      const triggerLabel = v ? RATING_LABEL[v] : '尚未檢查';
+
+      const row = document.createElement('div');
+      row.className = 'task-row ' + (v ? 'level-'+v : '');
+      row.dataset.floor = floor;
+      row.dataset.label = item.label;
+
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = item.label;
+
+      const btn = document.createElement('button');
+      btn.className = 'rate-trigger';
+      btn.type = 'button';
+
+      const btnText = document.createElement('span');
+      btnText.textContent = triggerLabel;
+
+      const arrow = document.createElement('span');
+      arrow.className = 'trigger-arrow';
+
+      btn.appendChild(btnText);
+      btn.appendChild(arrow);
+      row.appendChild(label);
+      row.appendChild(btn);
+      taskList.appendChild(row);
+    });
+
+    card.appendChild(head);
+    card.appendChild(track);
+    card.appendChild(taskList);
     floorsEl.appendChild(card);
   });
 
@@ -356,15 +448,32 @@ function render(){
   });
 
   const allDone = totalTasks > 0 && passCount === totalTasks;
-  const submittedNote = alreadySubmitted
-    ? `<div class="submitted-note">✓ 今日已於 ${pad(new Date(submissions[selectedBook]).getHours())}:${pad(new Date(submissions[selectedBook]).getMinutes())} 送出過，仍可再次送出更新結果</div>`
-    : '';
-  submitEl.innerHTML = `
-    <div class="submit-box">
-      ${submittedNote}
-      <div class="hint">${allDone ? '全部項目都已達到合格以上，可以送出今日結果' : `還有 ${totalTasks-passCount} 項尚未達到「有一點灰塵，但大致清掃」以上`}</div>
-      <button class="submit-btn" id="submit-btn">${alreadySubmitted ? '重新送出今日結果' : '送出今日結果'}</button>
-    </div>`;
+
+  submitEl.innerHTML = '';
+  const submitBox = document.createElement('div');
+  submitBox.className = 'submit-box';
+
+  if (alreadySubmitted) {
+    const subTime = new Date(submissions[selectedBook]);
+    const note = document.createElement('div');
+    note.className = 'submitted-note';
+    note.textContent = `✓ 今日已於 ${pad(subTime.getHours())}:${pad(subTime.getMinutes())} 送出過，仍可再次送出更新結果`;
+    submitBox.appendChild(note);
+  }
+
+  const hint = document.createElement('div');
+  hint.className = 'hint';
+  hint.textContent = allDone ? '全部項目都已達到合格以上，可以送出今日結果' : `還有 ${totalTasks-passCount} 項尚未達到「有一點灰塵，但大致清掃」以上`;
+  submitBox.appendChild(hint);
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'submit-btn';
+  submitBtn.id = 'submit-btn';
+  submitBtn.textContent = alreadySubmitted ? '重新送出今日結果' : '送出今日結果';
+  submitBox.appendChild(submitBtn);
+
+  submitEl.appendChild(submitBox);
+
   const btn = document.getElementById('submit-btn');
   if(btn){
     btn.addEventListener('click', async ()=>{
@@ -443,8 +552,11 @@ function renderAdminSubmissions(){
 
 function renderPendingPlaces() {
   const container = document.getElementById('pending-places-container');
+  if (!container) return;
+  container.innerHTML = '';
+
   let hasPending = false;
-  let html = '';
+  const fragment = document.createDocumentFragment();
 
   FLOOR_ORDER.forEach(floor => {
     const uncleanedItems = tasksData[floor].filter(item => {
@@ -454,55 +566,88 @@ function renderPendingPlaces() {
 
     if (uncleanedItems.length > 0) {
       hasPending = true;
-      html += `
-        <div class="floor" style="margin-bottom:14px;">
-          <div class="floor-head" style="background:#fff;">
-            <div class="floor-num">${floor}</div>
-            <div class="floor-meta">
-              <div style="font-weight:600; font-size:14px; color:var(--bad);">
-                剩餘 ${uncleanedItems.length} 個區域待處理
-              </div>
-            </div>
-          </div>
-          <div class="task-list">
-            ${uncleanedItems.map(item => {
-              const status = checklistData[taskId(floor, item.label)];
-              const isBad = status === '3';
-              const statusText = isBad ? '檢查不合格' : '尚未打掃／未檢查';
-              const statusColor = isBad ? 'var(--bad)' : 'var(--warn)';
-              const bgColor = isBad ? 'rgba(178,59,59,0.08)' : 'rgba(184,134,11,0.08)';
 
-              return `
-                <div class="task-row" style="background:${bgColor}; border-left:4px solid ${statusColor}; margin-bottom:6px; padding:10px; border-radius:6px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                      <div class="label" style="font-weight:600;">${item.label}</div>
-                      <div style="font-size:12px; color:var(--ink-soft); margin-top:2px;">
-                        負責書院：${item.book} (${inspectorData[item.book] || '未定'})
-                      </div>
-                    </div>
-                    <span style="font-size:12px; padding:4px 8px; border-radius:4px; background:#fff; color:${statusColor}; font-weight:600; white-space:nowrap;">
-                      ${statusText}
-                    </span>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
+      const floorDiv = document.createElement('div');
+      floorDiv.className = 'floor';
+      floorDiv.style.marginBottom = '14px';
+
+      const floorHead = document.createElement('div');
+      floorHead.className = 'floor-head';
+      floorHead.style.background = '#fff';
+
+      const floorNum = document.createElement('div');
+      floorNum.className = 'floor-num';
+      floorNum.textContent = floor;
+
+      const floorMeta = document.createElement('div');
+      floorMeta.className = 'floor-meta';
+
+      const pendingText = document.createElement('div');
+      pendingText.style.cssText = 'font-weight:600; font-size:14px; color:var(--bad);';
+      pendingText.textContent = `剩餘 ${uncleanedItems.length} 個區域待處理`;
+
+      floorMeta.appendChild(pendingText);
+      floorHead.appendChild(floorNum);
+      floorHead.appendChild(floorMeta);
+      floorDiv.appendChild(floorHead);
+
+      const taskList = document.createElement('div');
+      taskList.className = 'task-list';
+
+      uncleanedItems.forEach(item => {
+        const status = checklistData[taskId(floor, item.label)];
+        const isBad = status === '3';
+        const statusText = isBad ? '檢查不合格' : '尚未打掃／未檢查';
+        const statusColor = isBad ? 'var(--bad)' : 'var(--warn)';
+        const bgColor = isBad ? 'rgba(178,59,59,0.08)' : 'rgba(184,134,11,0.08)';
+
+        const taskRow = document.createElement('div');
+        taskRow.className = 'task-row';
+        taskRow.style.cssText = `background:${bgColor}; border-left:4px solid ${statusColor}; margin-bottom:6px; padding:10px; border-radius:6px;`;
+
+        const flexContainer = document.createElement('div');
+        flexContainer.style.cssText = 'display:flex; justify-content:space-between; align-items:center;';
+
+        const infoBox = document.createElement('div');
+
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'label';
+        labelDiv.style.fontWeight = '600';
+        labelDiv.textContent = item.label;
+
+        const subDiv = document.createElement('div');
+        subDiv.style.cssText = 'font-size:12px; color:var(--ink-soft); margin-top:2px;';
+        const inspectorName = (inspectorData && inspectorData[item.book]) ? inspectorData[item.book] : '未定';
+        subDiv.textContent = `負責書院：${item.book} (${inspectorName})`;
+
+        infoBox.appendChild(labelDiv);
+        infoBox.appendChild(subDiv);
+
+        const badge = document.createElement('span');
+        badge.style.cssText = `font-size:12px; padding:4px 8px; border-radius:4px; background:#fff; color:${statusColor}; font-weight:600; white-space:nowrap;`;
+        badge.textContent = statusText;
+
+        flexContainer.appendChild(infoBox);
+        flexContainer.appendChild(badge);
+        taskRow.appendChild(flexContainer);
+        taskList.appendChild(taskRow);
+      });
+
+      floorDiv.appendChild(taskList);
+      fragment.appendChild(floorDiv);
     }
   });
 
   if (!hasPending) {
-    container.innerHTML = `
-      <div class="empty-hint" style="background:#e5f2ea; color:var(--good); border-style:solid; border-color:var(--good);">
-        🎉 全校所有區域皆已完成打掃且評分合格！
-      </div>`;
+    const emptyHint = document.createElement('div');
+    emptyHint.className = 'empty-hint';
+    emptyHint.style.cssText = 'background:#e5f2ea; color:var(--good); border-style:solid; border-color:var(--good);';
+    emptyHint.textContent = '🎉 全校所有區域皆已完成打掃且評分合格！';
+    container.appendChild(emptyHint);
     return;
   }
 
-  container.innerHTML = html;
+  container.appendChild(fragment);
 }
 
 async function renderWeeklyMatrix() {
@@ -534,75 +679,126 @@ async function renderWeeklyMatrix() {
     });
   }
 
-  let html = '';
+  container.innerHTML = '';
+  const fragment = document.createDocumentFragment();
 
   FLOOR_ORDER.forEach(floor => {
-    html += `
-      <div class="floor" style="margin-bottom:16px;">
-        <div class="floor-head" style="background:#fff;">
-          <div class="floor-num">${floor}</div>
-          <div style="font-weight:600; font-size:15px;">本週 (一～五) 打掃狀況</div>
-        </div>
-        <div style="padding:12px; overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:center;">
-            <thead>
-              <tr style="border-bottom:2px solid var(--line); color:var(--ink-soft);">
-                <th style="text-align:left; padding:8px 6px;">位置名稱</th>
-                ${pastDays.map(d => `<th style="padding:6px; min-width:48px;">${d.label}<br><span style="font-size:11px; font-weight:normal;">(${d.dayName})</span></th>`).join('')}
-              </tr>
-            </thead>
-            <tbody>
-              ${tasksData[floor].map(item => {
-                const id = taskId(floor, item.label);
+    const floorDiv = document.createElement('div');
+    floorDiv.className = 'floor';
+    floorDiv.style.marginBottom = '16px';
 
-                const statusCols = pastDays.map(d => {
-                  const dayData = latestKV['checklist:' + d.key] ? JSON.parse(latestKV['checklist:' + d.key]) : {};
-                  const status = dayData[id];
+    const floorHead = document.createElement('div');
+    floorHead.className = 'floor-head';
+    floorHead.style.background = '#fff';
 
-                  let mark = '➖';
-                  let color = 'var(--ink-soft)';
+    const floorNum = document.createElement('div');
+    floorNum.className = 'floor-num';
+    floorNum.textContent = floor;
 
-                  if (status === '1' || status === '2') {
-                    mark = '✓';
-                    color = 'var(--good)';
-                  } else if (status === '3') {
-                    mark = '✕';
-                    color = 'var(--bad)';
-                  }
+    const titleDiv = document.createElement('div');
+    titleDiv.style.cssText = 'font-weight:600; font-size:15px;';
+    titleDiv.textContent = '本週 (一～五) 打掃狀況';
 
-                  return `<td style="padding:8px 4px; color:${color}; font-weight:bold; font-size:14px;">${mark}</td>`;
-                }).join('');
+    floorHead.appendChild(floorNum);
+    floorHead.appendChild(titleDiv);
+    floorDiv.appendChild(floorHead);
 
-                return `
-                  <tr style="border-bottom:1px solid var(--line);">
-                    <td style="text-align:left; padding:10px 6px; font-weight:500;">${item.label}</td>
-                    ${statusCols}
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
+    const tableWrap = document.createElement('div');
+    tableWrap.style.cssText = 'padding:12px; overflow-x:auto;';
+
+    const table = document.createElement('table');
+    table.style.cssText = 'width:100%; border-collapse:collapse; font-size:13px; text-align:center;';
+
+    const thead = document.createElement('thead');
+    const headTr = document.createElement('tr');
+    headTr.style.cssText = 'border-bottom:2px solid var(--line); color:var(--ink-soft);';
+
+    const thName = document.createElement('th');
+    thName.style.cssText = 'text-align:left; padding:8px 6px;';
+    thName.textContent = '位置名稱';
+    headTr.appendChild(thName);
+
+    pastDays.forEach(d => {
+      const th = document.createElement('th');
+      th.style.cssText = 'padding:6px; min-width:48px;';
+      th.append(d.label, document.createElement('br'));
+      
+      const daySpan = document.createElement('span');
+      daySpan.style.cssText = 'font-size:11px; font-weight:normal;';
+      daySpan.textContent = `(${d.dayName})`;
+      th.appendChild(daySpan);
+      
+      headTr.appendChild(th);
+    });
+    thead.appendChild(headTr);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    tasksData[floor].forEach(item => {
+      const id = taskId(floor, item.label);
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid var(--line)';
+
+      const tdLabel = document.createElement('td');
+      tdLabel.style.cssText = 'text-align:left; padding:10px 6px; font-weight:500;';
+      tdLabel.textContent = item.label;
+      tr.appendChild(tdLabel);
+
+      pastDays.forEach(d => {
+        const dayData = latestKV['checklist:' + d.key] ? JSON.parse(latestKV['checklist:' + d.key]) : {};
+        const status = dayData[id];
+
+        let mark = '➖';
+        let color = 'var(--ink-soft)';
+
+        if (status === '1' || status === '2') {
+          mark = '✓';
+          color = 'var(--good)';
+        } else if (status === '3') {
+          mark = '✕';
+          color = 'var(--bad)';
+        }
+
+        const tdStatus = document.createElement('td');
+        tdStatus.style.cssText = `padding:8px 4px; color:${color}; font-weight:bold; font-size:14px;`;
+        tdStatus.textContent = mark;
+        tr.appendChild(tdStatus);
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    tableWrap.appendChild(table);
+    floorDiv.appendChild(tableWrap);
+    fragment.appendChild(floorDiv);
   });
 
-  container.innerHTML = html;
+  container.appendChild(fragment);
 }
 
-document.getElementById('reroll-btn').addEventListener('click', async ()=>{
+document.getElementById('reroll-btn').addEventListener('click', async (e)=>{
   if(!confirm('確定要重新抽選本週清潔工嗎？這會覆蓋目前的名單。')) return;
   
-  BOOKS.forEach(book => {
-    if (book === '馭風書院') {
-      inspectorData[book] = ROSTER['馭風書院'][0]; // 👈 維持固定人員
-    } else {
-      inspectorData[book] = pick(ROSTER[book]); // 其他書院重新抽選
-    }
-  });
-  
-  await saveJSON('inspectors:'+WKEY, inspectorData);
-  render();
+  const btn = e.currentTarget;
+  btn.disabled = true; // 🔒 立即禁用按鈕，防重複發送請求
+
+  try {
+    BOOKS.forEach(book => {
+      if (book === '馭風書院') {
+        inspectorData[book] = ROSTER['馭風書院'][0];
+      } else {
+        inspectorData[book] = pick(ROSTER[book]);
+      }
+    });
+    
+    await saveJSON('inspectors:'+WKEY, inspectorData);
+    render();
+  } catch (err) {
+    alert('抽籤失敗，請稍後再試');
+  } finally {
+    btn.disabled = false; // 🔓 請求結束後恢復按鈕
+  }
 });
 
 (async function init(){
