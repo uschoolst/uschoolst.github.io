@@ -133,7 +133,7 @@ let submissions = null;
 let selectedBook = null;
 
 // 🔗 請務必確認 Apps Script 部署 URL 與 API Key 一致
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbJ2AgucH0nykpnF_113U1RV3zZiRsF7U50rPPmQfJH9CztTiB0l-0HrE1Ipw3b4Gm/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2rx9NMmQqqkuLvJvBPdaHKffrFhOQXV2dlsqyCfDb7d6PPk5-duSgL4_7VxX9Ckq_/exec';
 const API_KEY = 'u11501066';
 
 async function loadAll() {
@@ -820,8 +820,9 @@ async function renderWeeklyMatrix() {
 const rerollBtn = document.getElementById('reroll-btn');
 if (rerollBtn) {
   rerollBtn.addEventListener('click', async (e) => {
-    if (!confirm('確定要在本地重新抽選本週清潔工嗎？')) return;
+    if (!confirm('確定要重新抽選本週清潔工並儲存至雲端嗎？')) return;
 
+    // 1. 本地重新抽籤
     BOOKS.forEach(book => {
       if (book === '馭風書院') {
         inspectorData[book] = ROSTER['馭風書院'][0];
@@ -830,7 +831,13 @@ if (rerollBtn) {
       }
     });
 
+    // 2. 立即更新畫面給使用者看
     render();
+
+    // 3. 【關鍵修復】將新抽出的值寫回 Google 試算表（綁定本週的 Key）
+    await saveJSON('inspectors:' + WKEY, inspectorData);
+    
+    alert('本週清潔工已成功重新抽選並儲存！');
   });
 }
 
