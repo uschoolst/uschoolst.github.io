@@ -1,110 +1,110 @@
-alert("網站正在修改中");
+alert("呼籲各位這邊有一位不善良在嘗試注入一些東西 看到一些奇怪的東西請先忽略 開發人員正在嘗試解決")
 
-const BOOKS = ['馭風書院','矽晶書院','曦華書院','靛織書院'];
+const BOOKS = ['馭風書院', '矽晶書院', '曦華書院', '靛織書院'];
 const BOOK_COLOR = {
-  '馭風書院':'var(--book-wind)',
-  '矽晶書院':'var(--book-si)',
-  '曦華書院':'var(--book-dawn)',
-  '靛織書院':'var(--book-indigo)'
+  '馭風書院': 'var(--book-wind)',
+  '矽晶書院': 'var(--book-si)',
+  '曦華書院': 'var(--book-dawn)',
+  '靛織書院': 'var(--book-indigo)'
 };
 
 const DEFAULT_TASKS = {
   '1F': [
-    { label:'警衛室附近地板', book:'曦華書院' },
-    { label:'花圃維護', book:'曦華書院' },
-    { label:'走廊地板（靠共伴樞）', book:'曦華書院' },
-    { label:'花園', book:'曦華書院' },
-    { label:'火塘－地板', book:'靛織書院' },
-    { label:'火塘－桌子', book:'靛織書院' },
-    { label:'創客空間－地板', book:'靛織書院' },
-    { label:'創客空間－窗戶及桌椅', book:'靛織書院' },
-    { label:'性別友善廁所－洗手台', book:'曦華書院' },
-    { label:'性別友善廁所－馬桶', book:'曦華書院' },
-    { label:'性別友善廁所－地板', book:'曦華書院' },
-    { label:'無障礙廁所＋廁所走廊－地板', book:'曦華書院' },
-    { label:'無障礙廁所＋廁所走廊－刷馬桶、小便斗', book:'曦華書院' },
-    { label:'垃圾儲藏室（分類垃圾）', book:'靛織書院' },
-    { label:'一樓大廳－花圃維護', book:'曦華書院' },
-    { label:'一樓大廳－地板簡單清潔', book:'曦華書院' },
-    { label:'泮林－窗戶', book:'靛織書院' },
-    { label:'泮林－櫃子', book:'靛織書院' },
-    { label:'泮林－地板', book:'靛織書院' },
-    { label:'體育器材室（整理器材）', book:'靛織書院' },
-    { label:'一樓走廊－第一部分（掃拖）', book:'曦華書院' },
-    { label:'一樓走廊－第二部分（掃拖）', book:'曦華書院' },
-    { label:'一樓走廊－第三部分（掃拖）', book:'曦華書院' },
-    { label:'樓梯－共伴樞旁', book:'曦華書院' },
-    { label:'樓梯－廁所旁', book:'曦華書院' },
-    { label:'樓梯－通學樓梯（到 2F 空地）', book:'曦華書院' }
+    { label: '警衛室附近地板', book: '曦華書院' },
+    { label: '花圃維護', book: '曦華書院' },
+    { label: '走廊地板（靠共伴樞）', book: '曦華書院' },
+    { label: '花園', book: '曦華書院' },
+    { label: '火塘－地板', book: '靛織書院' },
+    { label: '火塘－桌子', book: '靛織書院' },
+    { label: '創客空間－地板', book: '靛織書院' },
+    { label: '創客空間－窗戶及桌椅', book: '靛織書院' },
+    { label: '性別友善廁所－洗手台', book: '曦華書院' },
+    { label: '性別友善廁所－馬桶', book: '曦華書院' },
+    { label: '性別友善廁所－地板', book: '曦華書院' },
+    { label: '無障礙廁所＋廁所走廊－地板', book: '曦華書院' },
+    { label: '無障礙廁所＋廁所走廊－刷馬桶、小便斗', book: '曦華書院' },
+    { label: '垃圾儲藏室（分類垃圾）', book: '靛織書院' },
+    { label: '一樓大廳－花圃維護', book: '曦華書院' },
+    { label: '一樓大廳－地板簡單清潔', book: '曦華書院' },
+    { label: '泮林－窗戶', book: '靛織書院' },
+    { label: '泮林－櫃子', book: '靛織書院' },
+    { label: '泮林－地板', book: '靛織書院' },
+    { label: '體育器材室（整理器材）', book: '靛織書院' },
+    { label: '一樓走廊－第一部分（掃拖）', book: '曦華書院' },
+    { label: '一樓走廊－第二部分（掃拖）', book: '曦華書院' },
+    { label: '一樓走廊－第三部分（掃拖）', book: '曦華書院' },
+    { label: '樓梯－共伴樞旁', book: '曦華書院' },
+    { label: '樓梯－廁所旁', book: '曦華書院' },
+    { label: '樓梯－通學樓梯（到 2F 空地）', book: '曦華書院' }
   ],
   '2F': [
-    { label:'教研樞旁花圃', book:'馭風書院' },
-    { label:'教研樞旁空地地板維護', book:'馭風書院' },
-    { label:'一般教室（一）', book:'馭風書院' },
-    { label:'一般教室（二）', book:'馭風書院' },
-    { label:'廁所－地板', book:'馭風書院' },
-    { label:'廁所－男廁刷馬桶等', book:'馭風書院' },
-    { label:'廁所－女廁刷馬桶等', book:'馭風書院' },
-    { label:'教研樞旁廁所－男廁', book:'馭風書院' },
-    { label:'教研樞旁廁所－女廁', book:'馭風書院' },
-    { label:'走廊＋無障礙廁所', book:'馭風書院' },
-    { label:'議策樞維護', book:'馭風書院' },
-    { label:'教研樞前空地', book:'馭風書院' },
-    { label:'通往一樓校園鏤空處（欄杆＋地板）', book:'馭風書院' },
-    { label:'向陽階梯附近地板一', book:'馭風書院' },
-    { label:'向陽階梯附近地板二', book:'馭風書院' },
-    { label:'樓梯－向陽階梯＋後方花圃維護（到 2F）', book:'馭風書院' },
-    { label:'樓梯－廁所樓梯（靠近一般教室）', book:'馭風書院' },
-    { label:'樓梯－廁所樓梯（靠近教研樞）', book:'馭風書院' }
+    { label: '教研樞旁花圃', book: '馭風書院' },
+    { label: '教研樞旁空地地板維護', book: '馭風書院' },
+    { label: '一般教室（一）', book: '馭風書院' },
+    { label: '一般教室（二）', book: '馭風書院' },
+    { label: '廁所－地板', book: '馭風書院' },
+    { label: '廁所－男廁刷馬桶等', book: '馭風書院' },
+    { label: '廁所－女廁刷馬桶等', book: '馭風書院' },
+    { label: '教研樞旁廁所－男廁', book: '馭風書院' },
+    { label: '教研樞旁廁所－女廁', book: '馭風書院' },
+    { label: '走廊＋無障礙廁所', book: '馭風書院' },
+    { label: '議策樞維護', book: '馭風書院' },
+    { label: '教研樞前空地', book: '馭風書院' },
+    { label: '通往一樓校園鏤空處（欄杆＋地板）', book: '馭風書院' },
+    { label: '向陽階梯附近地板一', book: '馭風書院' },
+    { label: '向陽階梯附近地板二', book: '馭風書院' },
+    { label: '樓梯－向陽階梯＋後方花圃維護（到 2F）', book: '馭風書院' },
+    { label: '樓梯－廁所樓梯（靠近一般教室）', book: '馭風書院' },
+    { label: '樓梯－廁所樓梯（靠近教研樞）', book: '馭風書院' }
   ],
   '3F': [
-    { label:'淬維護', book:'矽晶書院' },
-    { label:'一般教室（一）', book:'矽晶書院' },
-    { label:'一般教室（二）', book:'矽晶書院' },
-    { label:'廁所－地板', book:'矽晶書院' },
-    { label:'廁所－男廁刷馬桶等', book:'矽晶書院' },
-    { label:'廁所－女廁刷馬桶等', book:'矽晶書院' },
-    { label:'花圃旁廁所－男廁', book:'矽晶書院' },
-    { label:'花圃旁廁所－女廁', book:'矽晶書院' },
-    { label:'走廊＋無障礙廁所', book:'矽晶書院' },
-    { label:'地科／生物教室維護', book:'矽晶書院' },
-    { label:'PBL 研創維護', book:'矽晶書院' },
-    { label:'迴響維護', book:'矽晶書院' },
-    { label:'走廊－第一部分（掃加拖）', book:'矽晶書院' },
-    { label:'走廊－第二部分（掃加拖）', book:'矽晶書院' },
-    { label:'走廊－第三部分（掃加拖）', book:'矽晶書院' },
-    { label:'走廊－第四部分（掃加拖）', book:'矽晶書院' },
-    { label:'走廊－第五部分（掃加拖）', book:'矽晶書院' },
-    { label:'花圃空間', book:'矽晶書院' }
+    { label: '淬維護', book: '矽晶書院' },
+    { label: '一般教室（一）', book: '矽晶書院' },
+    { label: '一般教室（二）', book: '矽晶書院' },
+    { label: '廁所－地板', book: '矽晶書院' },
+    { label: '廁所－男廁刷馬桶等', book: '矽晶書院' },
+    { label: '廁所－女廁刷馬桶等', book: '矽晶書院' },
+    { label: '花圃旁廁所－男廁', book: '矽晶書院' },
+    { label: '花圃旁廁所－女廁', book: '矽晶書院' },
+    { label: '走廊＋無障礙廁所', book: '矽晶書院' },
+    { label: '地科／生物教室維護', book: '矽晶書院' },
+    { label: 'PBL 研創維護', book: '矽晶書院' },
+    { label: '迴響維護', book: '矽晶書院' },
+    { label: '走廊－第一部分（掃加拖）', book: '矽晶書院' },
+    { label: '走廊－第二部分（掃加拖）', book: '矽晶書院' },
+    { label: '走廊－第三部分（掃加拖）', book: '矽晶書院' },
+    { label: '走廊－第四部分（掃加拖）', book: '矽晶書院' },
+    { label: '走廊－第五部分（掃加拖）', book: '矽晶書院' },
+    { label: '花圃空間', book: '矽晶書院' }
   ]
 };
-const FLOOR_ORDER = ['1F','2F','3F'];
+const FLOOR_ORDER = ['1F', '2F', '3F'];
 
 const RATINGS = [
-  { value:'1', label:'1・非常乾淨' },
-  { value:'2', label:'2・有一點灰塵，但大致清掃' },
-  { value:'3', label:'3・不合格' }
+  { value: '1', label: '1・非常乾淨' },
+  { value: '2', label: '2・有一點灰塵，但大致清掃' },
+  { value: '3', label: '3・不合格' }
 ];
 const RATING_LABEL = {};
-RATINGS.forEach(r=>RATING_LABEL[r.value]=r.label);
+RATINGS.forEach(r => RATING_LABEL[r.value] = r.label);
 
-function buildRoster(){
-  const counts = { '矽晶書院':21, '曦華書院':20, '靛織書院':20 };
+function buildRoster() {
+  const counts = { '矽晶書院': 21, '曦華書院': 20, '靛織書院': 20 };
   const roster = {
-    '馭風書院': ['馭風固定員'] // 可自行修改固定名單
+    '馭風書院': ['馭風固定員']
   };
-  
+
   ['矽晶書院', '曦華書院', '靛織書院'].forEach(book => {
     const n = counts[book];
-    roster[book] = Array.from({length:n}, (_,i)=> book.slice(0,2) + String(i+1).padStart(2,'0'));
+    roster[book] = Array.from({ length: n }, (_, i) => book.slice(0, 2) + String(i + 1).padStart(2, '0'));
   });
   return roster;
 }
 const ROSTER = buildRoster();
 
-function pad(n){ return String(n).padStart(2,'0'); }
-function monthKey(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1); }
-function dateKey(d){ return monthKey(d) + '-' + pad(d.getDate()); }
+function pad(n) { return String(n).padStart(2, '0'); }
+function monthKey(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1); }
+function dateKey(d) { return monthKey(d) + '-' + pad(d.getDate()); }
 
 function weekKey(d) {
   const target = new Date(d.valueOf());
@@ -119,7 +119,7 @@ function weekKey(d) {
   return target.getFullYear() + '-W' + pad(weekNum);
 }
 
-function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
 const now = new Date();
 const MKEY = monthKey(now);
@@ -132,15 +132,16 @@ let checklistData = null;
 let submissions = null;
 let selectedBook = null;
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoBktOhHu78xxS67dHFDTyM3pVUAsvbV-6F4xARQnLG-oUkMmnFHg1l4PUk96qA0S6/exec';
-const API_KEY = 'u11501021';
+// 🔗 請務必確認 Apps Script 部署 URL 與 API Key 一致
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbJ2AgucH0nykpnF_113U1RV3zZiRsF7U50rPPmQfJH9CztTiB0l-0HrE1Ipw3b4Gm/exec';
+const API_KEY = 'u11501066';
 
-async function loadAll(){
+async function loadAll() {
   tasksData = DEFAULT_TASKS;
   const kv = await fetchDump();
 
-  inspectorData = kv['inspectors:'+WKEY] ? JSON.parse(kv['inspectors:'+WKEY]) : null;
-  if(!inspectorData){
+  inspectorData = kv['inspectors:' + WKEY] ? JSON.parse(kv['inspectors:' + WKEY]) : null;
+  if (!inspectorData) {
     inspectorData = {};
     BOOKS.forEach(book => {
       if (book === '馭風書院') {
@@ -149,68 +150,88 @@ async function loadAll(){
         inspectorData[book] = pick(ROSTER[book]);
       }
     });
-    await saveJSON('inspectors:'+WKEY, inspectorData);
   }
-  checklistData = kv['checklist:'+DKEY] ? JSON.parse(kv['checklist:'+DKEY]) : {};
-  submissions = kv['submissions:'+DKEY] ? JSON.parse(kv['submissions:'+DKEY]) : {};
+  checklistData = kv['checklist:' + DKEY] ? JSON.parse(kv['checklist:' + DKEY]) : {};
+  submissions = kv['submissions:' + DKEY] ? JSON.parse(kv['submissions:' + DKEY]) : {};
 }
 
-async function fetchDump(){
-  try{
+async function fetchDump() {
+  try {
     const res = await fetch(APPS_SCRIPT_URL + '?action=dump');
     const data = await res.json();
     const map = {};
-    (data.rows || []).forEach(r=>{ map[r.key] = r.value; });
+    (data.rows || []).forEach(r => { map[r.key] = r.value; });
     return map;
-  }catch(e){
+  } catch (e) {
     console.error('dump error', e);
     return {};
   }
 }
 
-async function saveJSON(key, obj){
-  try{
-    await fetch(APPS_SCRIPT_URL, {
+async function saveJSON(key, obj) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ 
-        apiKey: API_KEY, // 👈 新增此欄位供後端驗證
-        action: 'set', 
-        key: key, 
-        value: JSON.stringify(obj) 
+      body: JSON.stringify({
+        apiKey: API_KEY,
+        action: 'set',
+        key: key,
+        value: JSON.stringify(obj)
       })
     });
-  }catch(e){
+    const result = await res.json();
+    if (result.error) {
+      console.error('Save error from server:', result.error);
+    }
+  } catch (e) {
     console.error('save error', key, e);
   }
 }
 
-function taskId(floor, label){ return floor + '||' + label; }
-function floorsForBook(book){
-  return FLOOR_ORDER.filter(floor => tasksData[floor].some(item=>item.book===book));
+function taskId(floor, label) { return floor + '||' + label; }
+function floorsForBook(book) {
+  return FLOOR_ORDER.filter(floor => tasksData[floor].some(item => item.book === book));
 }
 
-/* Bottom sheet */
+/* Bottom sheet UI 控制 */
 const sheetBackdrop = document.getElementById('sheet-backdrop');
 const sheetEl = document.getElementById('sheet');
-function openSheet(title, options, current, onPick){
+
+function openSheet(title, options, current, onPick) {
   document.getElementById('sheet-title').textContent = title;
   const wrap = document.getElementById('sheet-options');
-  wrap.innerHTML = options.map(o=>`
-    <button class="sheet-option ${o.value===current?'active':''}" data-value="${o.value}" type="button">
-      <span>${o.label}</span>
-      ${o.value===current?'<span class="check-mark">✓</span>':''}
-    </button>`).join('');
-  wrap.querySelectorAll('.sheet-option').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
+  wrap.innerHTML = '';
+
+  options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'sheet-option' + (o.value === current ? ' active' : '');
+    btn.type = 'button';
+
+    const spanText = document.createElement('span');
+    spanText.textContent = o.label;
+    btn.appendChild(spanText);
+
+    if (o.value === current) {
+      const checkMark = document.createElement('span');
+      checkMark.className = 'check-mark';
+      checkMark.textContent = '✓';
+      btn.appendChild(checkMark);
+    }
+
+    btn.addEventListener('click', () => {
       closeSheet();
-      onPick(btn.dataset.value);
+      onPick(o.value);
     });
+
+    wrap.appendChild(btn);
   });
+
   sheetBackdrop.classList.add('show');
   sheetEl.classList.add('show');
 }
-function closeSheet(){
+
+function closeSheet() {
   sheetBackdrop.classList.remove('show');
   sheetEl.classList.remove('show');
 }
@@ -223,7 +244,7 @@ function switchTab(tabName) {
   tabs.forEach(t => {
     const viewEl = document.getElementById(`view-${t}`);
     const tabEl = document.getElementById(`tab-${t}`);
-    
+
     const isTarget = (t === tabName);
     if (viewEl) viewEl.style.display = isTarget ? 'block' : 'none';
     if (tabEl) tabEl.classList.toggle('active', isTarget);
@@ -241,21 +262,28 @@ function switchTab(tabName) {
   }
 }
 
-function renderWhoBox(){
+function renderWhoBox() {
   const el = document.getElementById('who-box');
   el.innerHTML = '';
 
-  if(!selectedBook){
+  if (!selectedBook) {
     const label = document.createElement('label');
     label.textContent = '請問您的書院為何？';
-    
+
     const btn = document.createElement('button');
     btn.className = 'select-trigger placeholder';
     btn.id = 'book-trigger';
     btn.type = 'button';
-    btn.innerHTML = '<span>請選擇書院</span><span class="trigger-arrow"></span>';
-    btn.addEventListener('click', ()=>{
-      openSheet('請選擇書院', BOOKS.map(b=>({value:b,label:b})), selectedBook, (val)=>{
+
+    const txt = document.createElement('span');
+    txt.textContent = '請選擇書院';
+    const arrow = document.createElement('span');
+    arrow.className = 'trigger-arrow';
+
+    btn.appendChild(txt);
+    btn.appendChild(arrow);
+    btn.addEventListener('click', () => {
+      openSheet('請選擇書院', BOOKS.map(b => ({ value: b, label: b })), selectedBook, (val) => {
         selectedBook = val;
         render();
       });
@@ -265,7 +293,7 @@ function renderWhoBox(){
     el.appendChild(btn);
   } else {
     const floors = floorsForBook(selectedBook).join('、');
-    
+
     const container = document.createElement('div');
     container.className = 'who-current';
 
@@ -275,7 +303,7 @@ function renderWhoBox(){
     const b = document.createElement('b');
     b.textContent = selectedBook;
     info.append(b, `（負責 ${floors}）`, document.createElement('br'), '本週清潔工：');
-    
+
     const inspectorSpan = document.createElement('span');
     inspectorSpan.textContent = inspectorData[selectedBook] || '未定';
     info.append(inspectorSpan);
@@ -284,7 +312,7 @@ function renderWhoBox(){
     swapBtn.className = 'swap-btn';
     swapBtn.type = 'button';
     swapBtn.textContent = '更換書院';
-    swapBtn.addEventListener('click', ()=>{
+    swapBtn.addEventListener('click', () => {
       selectedBook = null;
       render();
     });
@@ -295,9 +323,9 @@ function renderWhoBox(){
   }
 }
 
-function render(){
+function render() {
   document.getElementById('today-label').textContent =
-    now.toLocaleDateString('zh-TW', { month:'long', day:'numeric', weekday:'short' });
+    now.toLocaleDateString('zh-TW', { month: 'long', day: 'numeric', weekday: 'short' });
 
   renderWhoBox();
 
@@ -328,7 +356,7 @@ function render(){
   const submitEl = document.getElementById('submit-area');
   floorsEl.innerHTML = '';
 
-  if(!selectedBook){
+  if (!selectedBook) {
     floorsEl.innerHTML = '<div class="empty-hint">請先選擇您的書院，才會顯示需要檢查的樓層與項目。</div>';
     submitEl.innerHTML = '';
     renderAdminSubmissions();
@@ -338,15 +366,15 @@ function render(){
   const alreadySubmitted = !!submissions[selectedBook];
   let totalTasks = 0, passCount = 0;
 
-  floorsForBook(selectedBook).forEach(floor=>{
-    const items = tasksData[floor].filter(item=>item.book===selectedBook);
-    const doneCount = items.filter(item=>{
-      const v = checklistData[taskId(floor,item.label)];
+  floorsForBook(selectedBook).forEach(floor => {
+    const items = tasksData[floor].filter(item => item.book === selectedBook);
+    const doneCount = items.filter(item => {
+      const v = checklistData[taskId(floor, item.label)];
       return v === '1' || v === '2';
     }).length;
     totalTasks += items.length;
     passCount += doneCount;
-    const pct = items.length ? Math.round(doneCount/items.length*100) : 0;
+    const pct = items.length ? Math.round(doneCount / items.length * 100) : 0;
 
     const card = document.createElement('div');
     card.className = 'floor';
@@ -376,7 +404,7 @@ function render(){
 
     const progLine = document.createElement('div');
     progLine.className = 'progress-line';
-    
+
     const strong = document.createElement('strong');
     strong.textContent = doneCount;
     progLine.append(strong, ` / ${items.length} 項達到合格以上`);
@@ -396,12 +424,12 @@ function render(){
     const taskList = document.createElement('div');
     taskList.className = 'task-list';
 
-    items.forEach(item=>{
-      const v = checklistData[taskId(floor,item.label)] || '';
+    items.forEach(item => {
+      const v = checklistData[taskId(floor, item.label)] || '';
       const triggerLabel = v ? RATING_LABEL[v] : '尚未檢查';
 
       const row = document.createElement('div');
-      row.className = 'task-row ' + (v ? 'level-'+v : '');
+      row.className = 'task-row ' + (v ? 'level-' + v : '');
       row.dataset.floor = floor;
       row.dataset.label = item.label;
 
@@ -432,16 +460,16 @@ function render(){
     floorsEl.appendChild(card);
   });
 
-  floorsEl.querySelectorAll('.task-row').forEach(row=>{
+  floorsEl.querySelectorAll('.task-row').forEach(row => {
     const btn = row.querySelector('.rate-trigger');
-    if(btn.disabled) return;
-    btn.addEventListener('click', ()=>{
+    if (btn.disabled) return;
+    btn.addEventListener('click', () => {
       const floor = row.dataset.floor, label = row.dataset.label;
       const id = taskId(floor, label);
       const current = checklistData[id] || '';
-      const options = [{value:'',label:'尚未檢查'}, ...RATINGS];
-      openSheet(label, options, current, (val)=>{
-        if(val){ checklistData[id] = val; } else { delete checklistData[id]; }
+      const options = [{ value: '', label: '尚未檢查' }, ...RATINGS];
+      openSheet(label, options, current, (val) => {
+        if (val) { checklistData[id] = val; } else { delete checklistData[id]; }
         render();
       });
     });
@@ -463,7 +491,7 @@ function render(){
 
   const hint = document.createElement('div');
   hint.className = 'hint';
-  hint.textContent = allDone ? '全部項目都已達到合格以上，可以送出今日結果' : `還有 ${totalTasks-passCount} 項尚未達到「有一點灰塵，但大致清掃」以上`;
+  hint.textContent = allDone ? '全部項目都已達到合格以上，可以送出今日結果' : `還有 ${totalTasks - passCount} 項尚未達到「有一點灰塵，但大致清掃」以上`;
   submitBox.appendChild(hint);
 
   const submitBtn = document.createElement('button');
@@ -475,11 +503,11 @@ function render(){
   submitEl.appendChild(submitBox);
 
   const btn = document.getElementById('submit-btn');
-  if(btn){
-    btn.addEventListener('click', async ()=>{
-      if(!allDone){
-        const ok = confirm(`還有 ${totalTasks-passCount} 項尚未達到合格以上，確定要送出嗎？`);
-        if(!ok) return;
+  if (btn) {
+    btn.addEventListener('click', async () => {
+      if (!allDone) {
+        const ok = confirm(`還有 ${totalTasks - passCount} 項尚未達到合格以上，確定要送出嗎？`);
+        if (!ok) return;
       }
 
       const box = btn.closest('.submit-box');
@@ -492,30 +520,30 @@ function render(){
       const pctEl = document.getElementById('submit-progress-pct');
 
       let pct = 0;
-      const timer = setInterval(()=>{
+      const timer = setInterval(() => {
         pct += (90 - pct) * 0.12 + 0.6;
-        if(pct > 90) pct = 90;
+        if (pct > 90) pct = 90;
         fillEl.style.width = pct + '%';
         pctEl.textContent = Math.round(pct) + '%';
       }, 120);
 
-      try{
+      try {
         const latestKV = await fetchDump();
-        const serverChecklist = latestKV['checklist:'+DKEY] ? JSON.parse(latestKV['checklist:'+DKEY]) : {};
-        floorsForBook(selectedBook).forEach(floor=>{
-          tasksData[floor].filter(item=>item.book===selectedBook).forEach(item=>{
+        const serverChecklist = latestKV['checklist:' + DKEY] ? JSON.parse(latestKV['checklist:' + DKEY]) : {};
+        floorsForBook(selectedBook).forEach(floor => {
+          tasksData[floor].filter(item => item.book === selectedBook).forEach(item => {
             const id = taskId(floor, item.label);
-            if(checklistData[id]) serverChecklist[id] = checklistData[id];
+            if (checklistData[id]) serverChecklist[id] = checklistData[id];
             else delete serverChecklist[id];
           });
         });
         checklistData = serverChecklist;
-        await saveJSON('checklist:'+DKEY, checklistData);
+        await saveJSON('checklist:' + DKEY, checklistData);
 
-        const latestSubs = latestKV['submissions:'+DKEY] ? JSON.parse(latestKV['submissions:'+DKEY]) : {};
+        const latestSubs = latestKV['submissions:' + DKEY] ? JSON.parse(latestKV['submissions:' + DKEY]) : {};
         latestSubs[selectedBook] = new Date().toISOString();
         submissions = latestSubs;
-        await saveJSON('submissions:'+DKEY, submissions);
+        await saveJSON('submissions:' + DKEY, submissions);
       } finally {
         clearInterval(timer);
         fillEl.style.width = '100%';
@@ -529,24 +557,36 @@ function render(){
   renderAdminSubmissions();
 }
 
-function renderAdminSubmissions(){
+function renderAdminSubmissions() {
   const el = document.getElementById('admin-submissions');
-  el.innerHTML = BOOKS.map(book=>{
+  if (!el) return;
+  el.innerHTML = '';
+
+  BOOKS.forEach(book => {
     const sub = submissions[book];
     const status = sub ? `已於 ${pad(new Date(sub).getHours())}:${pad(new Date(sub).getMinutes())} 送出` : '尚未送出';
-    return `<div class="admin-row">
-      <span>${book}：${status}</span>
-      ${sub ? `<button data-unsubmit="${book}" type="button">撤銷送出</button>` : ''}
-    </div>`;
-  }).join('');
-  el.querySelectorAll('[data-unsubmit]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const book = btn.dataset.unsubmit;
-      if(!confirm(`確定要撤銷 ${book} 今日的送出紀錄嗎？`)) return;
-      delete submissions[book];
-      await saveJSON('submissions:'+DKEY, submissions);
-      render();
-    });
+
+    const row = document.createElement('div');
+    row.className = 'admin-row';
+
+    const span = document.createElement('span');
+    span.textContent = `${book}：${status}`;
+    row.appendChild(span);
+
+    if (sub) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = '撤銷送出';
+      btn.addEventListener('click', async () => {
+        if (!confirm(`確定要撤銷 ${book} 今日的送出紀錄嗎？`)) return;
+        delete submissions[book];
+        await saveJSON('submissions:' + DKEY, submissions);
+        render();
+      });
+      row.appendChild(btn);
+    }
+
+    el.appendChild(row);
   });
 }
 
@@ -661,7 +701,7 @@ async function renderWeeklyMatrix() {
   const today = new Date();
   const dayOfWeek = today.getDay();
   const distanceToMonday = (dayOfWeek === 0) ? -6 : 1 - dayOfWeek;
-  
+
   const monday = new Date(today);
   monday.setDate(today.getDate() + distanceToMonday);
 
@@ -671,7 +711,7 @@ async function renderWeeklyMatrix() {
   for (let i = 0; i < 5; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    
+
     pastDays.push({
       key: dateKey(d),
       label: `${d.getMonth() + 1}/${d.getDate()}`,
@@ -722,12 +762,12 @@ async function renderWeeklyMatrix() {
       const th = document.createElement('th');
       th.style.cssText = 'padding:6px; min-width:48px;';
       th.append(d.label, document.createElement('br'));
-      
+
       const daySpan = document.createElement('span');
       daySpan.style.cssText = 'font-size:11px; font-weight:normal;';
       daySpan.textContent = `(${d.dayName})`;
       th.appendChild(daySpan);
-      
+
       headTr.appendChild(th);
     });
     thead.appendChild(headTr);
@@ -777,13 +817,11 @@ async function renderWeeklyMatrix() {
   container.appendChild(fragment);
 }
 
-document.getElementById('reroll-btn').addEventListener('click', async (e)=>{
-  if(!confirm('確定要重新抽選本週清潔工嗎？這會覆蓋目前的名單。')) return;
-  
-  const btn = e.currentTarget;
-  btn.disabled = true; // 🔒 立即禁用按鈕，防重複發送請求
+const rerollBtn = document.getElementById('reroll-btn');
+if (rerollBtn) {
+  rerollBtn.addEventListener('click', async (e) => {
+    if (!confirm('確定要在本地重新抽選本週清潔工嗎？')) return;
 
-  try {
     BOOKS.forEach(book => {
       if (book === '馭風書院') {
         inspectorData[book] = ROSTER['馭風書院'][0];
@@ -791,24 +829,24 @@ document.getElementById('reroll-btn').addEventListener('click', async (e)=>{
         inspectorData[book] = pick(ROSTER[book]);
       }
     });
-    
-    await saveJSON('inspectors:'+WKEY, inspectorData);
-    render();
-  } catch (err) {
-    alert('抽籤失敗，請稍後再試');
-  } finally {
-    btn.disabled = false; // 🔓 請求結束後恢復按鈕
-  }
-});
 
-(async function init(){
-  if(APPS_SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
-    document.getElementById('floors').innerHTML =
-      '<div class="empty-hint">尚未設定資料庫網址：請把程式碼最上面的 APPS_SCRIPT_URL 換成你部署 Apps Script 後拿到的 /exec 網址。</div>';
+    render();
+  });
+}
+
+(async function init() {
+  const floorsEl = document.getElementById('floors');
+  if (APPS_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+    if (floorsEl) {
+      floorsEl.innerHTML =
+        '<div class="empty-hint">尚未設定資料庫網址：請把程式碼最上面的 APPS_SCRIPT_URL 換成你部署 Apps Script 後拿到的 /exec 網址。</div>';
+    }
     return;
   }
-  document.getElementById('floors').innerHTML =
-    '<div class="loading">載入中…<div class="loading-bar-track"><div class="loading-bar-fill"></div></div></div>';
+  if (floorsEl) {
+    floorsEl.innerHTML =
+      '<div class="loading">載入中…<div class="loading-bar-track"><div class="loading-bar-fill"></div></div></div>';
+  }
   await loadAll();
   render();
 })();
