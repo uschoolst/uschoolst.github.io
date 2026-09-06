@@ -88,17 +88,17 @@ const RATINGS = [
 const RATING_LABEL = {};
 RATINGS.forEach(r=>RATING_LABEL[r.value]=r.label);
 
-// 馭風書院固定不抽真人，維持原本的匿名代號（馭01～馭21）
-function buildRoster(){
-  const counts = { '馭風書院':21 };
-  const roster = {};
-  Object.keys(counts).forEach(book=>{
-    const n = counts[book];
-    roster[book] = Array.from({length:n}, (_,i)=> book.slice(0,2) + String(i+1).padStart(2,'0'));
-  });
-  return roster;
-}
-const ROSTER = buildRoster();
+// // 馭風書院固定不抽真人，維持原本的匿名代號（馭01～馭21）
+// function buildRoster(){
+//   const counts = { '馭風書院':21 };
+//   const roster = {};
+//   Object.keys(counts).forEach(book=>{
+//     const n = counts[book];
+//     roster[book] = Array.from({length:n}, (_,i)=> book.slice(0,2) + String(i+1).padStart(2,'0'));
+//   });
+//   return roster;
+// }
+// const ROSTER = buildRoster();
 
 // 矽晶書院、靛織書院、曦華書院：真實學生名單（學號＋姓名），用來抽出本週實際負責的人
 // 注意：矽晶書院原始名單中「序號10・邱子彧」缺少學號，暫時無法排入抽選名單，
@@ -171,9 +171,9 @@ const REAL_ROSTER = {
     { id:'11501082', name:'嚴宥善' }
   ]
 };
-function formatStudent(s){ return s.name + '（' + s.id + '）'; }
+function formatStudent(s){ return/* s.name + */ s.id; }
 function pickBookRepresentative(book){
-  return (book === '馭風書院') ? pick(ROSTER[book]) : formatStudent(pick(REAL_ROSTER[book]));
+  return (book === '馭風書院') ? ['馭風固定員'] : formatStudent(pick(REAL_ROSTER[book]));
 }
 
 function pad(n){ return String(n).padStart(2,'0'); }
@@ -209,7 +209,7 @@ let submissions = null;
 let selectedBook = null;
 let dataReady = false; // loadAll() 完成之前，pending/weekly 分頁不能拿資料來用
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz2A-rk-5wYV5LlGoPSVCVD64_aXvS3fvb0I5C0WygsUtGmXUMKJQbio8a9wruNUfZt/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw0egzt2YU9KwaKdF78cIoHS7koZlWkTzTLitCL1NsphKovO3HaH47rDbxZyzNeQytW/exec';
 
 async function loadAll(){
   tasksData = DEFAULT_TASKS;
