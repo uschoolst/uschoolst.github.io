@@ -714,3 +714,7 @@ details.admin summary::-webkit-details-marker {
   cursor: pointer;
   text-decoration: underline;
 }
+
+.board.no-submit-pad {
+  padding-bottom: 0px;
+}
