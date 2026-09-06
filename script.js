@@ -372,7 +372,7 @@ function render(){
   if(!selectedBook){
     floorsEl.innerHTML = '<div class="empty-hint">請先選擇您的書院，才會顯示需要檢查的樓層與項目。</div>';
     submitEl.innerHTML = '';
-    renderAdminSubmissions();
+    // renderAdminSubmissions();
     return;
   }
 
@@ -504,29 +504,29 @@ function render(){
     });
   }
 
-  renderAdminSubmissions();
+  // renderAdminSubmissions();
 }
 
-function renderAdminSubmissions(){
-  const el = document.getElementById('admin-submissions');
-  el.innerHTML = BOOKS.map(book=>{
-    const sub = submissions[book];
-    const status = sub ? `已於 ${pad(new Date(sub).getHours())}:${pad(new Date(sub).getMinutes())} 送出` : '尚未送出';
-    return `<div class="admin-row">
-      <span>${book}：${status}</span>
-      ${sub ? `<button data-unsubmit="${book}" type="button">撤銷送出</button>` : ''}
-    </div>`;
-  }).join('');
-  el.querySelectorAll('[data-unsubmit]').forEach(btn=>{
-    btn.addEventListener('click', async ()=>{
-      const book = btn.dataset.unsubmit;
-      if(!confirm(`確定要撤銷 ${book} 今日的送出紀錄嗎？`)) return;
-      delete submissions[book];
-      await saveJSON('submissions:'+DKEY, submissions);
-      render();
-    });
-  });
-}
+// function renderAdminSubmissions(){
+//   const el = document.getElementById('admin-submissions');
+//   el.innerHTML = BOOKS.map(book=>{
+//     const sub = submissions[book];
+//     const status = sub ? `已於 ${pad(new Date(sub).getHours())}:${pad(new Date(sub).getMinutes())} 送出` : '尚未送出';
+//     return `<div class="admin-row">
+//       <span>${book}：${status}</span>
+//       ${sub ? `<button data-unsubmit="${book}" type="button">撤銷送出</button>` : ''}
+//     </div>`;
+//   }).join('');
+//   el.querySelectorAll('[data-unsubmit]').forEach(btn=>{
+//     btn.addEventListener('click', async ()=>{
+//       const book = btn.dataset.unsubmit;
+//       if(!confirm(`確定要撤銷 ${book} 今日的送出紀錄嗎？`)) return;
+//       delete submissions[book];
+//       await saveJSON('submissions:'+DKEY, submissions);
+//       render();
+//     });
+//   });
+// }
 
 function renderPendingPlaces() {
   const container = document.getElementById('pending-places-container');
@@ -614,10 +614,14 @@ async function renderWeeklyMatrix() {
   const dayOfWeek = today.getDay(); // 0(日), 1(一), 2(二), ..., 6(六)
 
   // 計算距離本週一相差幾天（如果今天是週日 0，則當週一為 6 天前）
-  const distanceToMonday = (dayOfWeek === 0) ? -6 : 1 - dayOfWeek;
+  // const distanceToMonday = (dayOfWeek === 0) ? -6 : 1 - dayOfWeek;
 
-  const monday = new Date(today);
-  monday.setDate(today.getDate() + distanceToMonday);
+  // const monday = new Date(today);
+  // monday.setDate(today.getDate() + distanceToMonday);
+  const cycleStart = saturdayOf(today);
+  const mondayOffset = (1 - WEEK_RESET_DAY + 7) % 7; // 重置日到「一」還要過幾天
+  const monday = new Date(cycleStart);
+  monday.setDate(cycleStart.getDate() + mondayOffset);
 
   // 2. 依序產生當週 週一至週五 的 5 天日期
   const pastDays = [];
