@@ -786,8 +786,8 @@ async function renderWeeklyMatrix() {
         const dayData = latestKV['checklist:' + d.key] ? JSON.parse(latestKV['checklist:' + d.key]) : {};
         const status = dayData[id];
 
-        let mark = '➖';
-        let color = 'var(--ink-soft)';
+        let mark = '•';
+        let color = 'var(--line)';
 
         if (status === '1' || status === '2') {
           mark = '✓';

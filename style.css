@@ -1,13 +1,14 @@
   :root{
     --paper:#f2f1ec;
-    --ink:#22241f;
+    --ink:#000000;
+    --school-blue:#092369;
     --ink-soft:#5c5e57;
-    --line:#d8d6cd;
+    --line:#dbd9d0;
     --card:#fbfaf7;
-    --book-wind:#3f7ea6;
-    --book-si:#3e8e73;
-    --book-dawn:#d97e3d;
-    --book-indigo:#4b4e93;
+    --book-wind:#286286;
+    --book-si:#000705;
+    --book-dawn:#fce9aa;
+    --book-indigo:#071c47;
     --good:#2f8f5b;
     --warn:#b8860b;
     --bad:#b23b3b;
@@ -30,7 +31,7 @@
     display:flex;
     align-items:baseline;
     justify-content:space-between;
-    border-bottom:3px solid var(--ink);
+    border-bottom:3px solid var(--school-blue);
     padding-bottom:12px;
     margin-bottom:14px;
   }
@@ -41,6 +42,7 @@
     letter-spacing:0.3px;
     margin:0;
     line-height:1;
+    color:var(--school-blue);
   }
   .masthead .date{
     font-size:12.5px;
@@ -67,9 +69,9 @@
     text-align: center;
   }
   .tab-btn.active {
-    background: var(--ink);
+    background: var(--school-blue);
     color: #fff;
-    border-color: var(--ink);
+    border-color: var(--school-blue);
     font-weight: 600;
   }
 
@@ -362,7 +364,7 @@
   .loading-bar-fill{
     width:40%;
     height:100%;
-    background:var(--ink);
+    background:var(--school-blue);
     border-radius:99px;
     animation:loading-slide 1.1s ease-in-out infinite;
   }
