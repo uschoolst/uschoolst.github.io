@@ -1,5 +1,3 @@
-alert("呼籲各位這邊有一位同學在嘗試注入一些東西 看到一些奇怪的東西請先忽略 開發人員正在嘗試解決")
-
 const BOOKS = ['馭風書院', '矽晶書院', '曦華書院', '靛織書院'];
 const BOOK_COLOR = {
   '馭風書院': 'var(--book-wind)',
@@ -91,7 +89,7 @@ RATINGS.forEach(r => RATING_LABEL[r.value] = r.label);
 function buildRoster() {
   const counts = { '矽晶書院': 21, '曦華書院': 20, '靛織書院': 20 };
   const roster = {
-    '馭風書院': ['馭風固定員']
+    '馭風書院': ['固定員']
   };
 
   ['矽晶書院', '曦華書院', '靛織書院'].forEach(book => {
