@@ -1,75 +1,94 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>打掃工作分配表</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="icon" href="https://i.meee.com.tw/urZ8lEE.webp" type="image/x-icon" />
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>打掃工作分配表</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="icon" href="https://i.meee.com.tw/urZ8lEE.webp" type="image/x-icon" />
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="board">
-  <div class="nav-tabs">
-    <button class="tab-btn active" id="tab-check" onclick="switchTab('check')">打掃檢查</button>
-    <button class="tab-btn" id="tab-pending" onclick="switchTab('pending')">待打掃／未合格</button>
-    <button class="tab-btn" id="tab-weekly" onclick="switchTab('weekly')">本週打掃狀況</button>
+  <div class="pw-gate" id="pw-gate" style="display:none;">
+    <div class="pw-box">
+      <div class="pw-title" id="pw-title">請輸入密碼</div>
+      <div class="pw-sub" id="pw-sub"></div>
+      <input type="password" id="pw-input" class="pw-input" placeholder="密碼" autocomplete="off">
+      <div class="pw-error" id="pw-error" style="display:none;">密碼錯誤，請再試一次</div>
+      <button class="pw-submit" id="pw-submit" type="button">確認</button>
+      <button class="pw-cancel" id="pw-cancel" type="button">取消</button>
+    </div>
   </div>
 
-  <div id="view-check">
-    <div class="masthead">
-      <h1 color:#092369>今日打掃檢查</h1>
-      <div class="date" id="today-label"></div>
+  <div class="board">
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="tab-check" onclick="switchTab('check')">打掃檢查</button>
+      <button class="tab-btn" id="tab-pending" onclick="switchTab('pending')">待打掃／未合格</button>
+      <button class="tab-btn" id="tab-weekly" onclick="switchTab('weekly')">本週打掃狀況</button>
     </div>
 
-    <div class="who-box" id="who-box"></div>
-    <div class="roster-strip" id="roster-strip"></div>
-    <div id="floors"></div>
-
-    <details class="admin">
-      <summary>管理設定</summary>
-      <div class="admin-body" id="admin-body">
-        本月清潔工由系統於每週自動依書院成員重新抽選；每日的檢查結果每天自動重置。
-        <div>
-          <button id="reroll-btn" type="button">重新抽選本週清潔工</button>
-        </div>
-        <div id="admin-submissions"></div>
+    <div id="view-check">
+      <div class="masthead">
+        <h1>今日打掃檢查</h1>
+        <div class="date" id="today-label"></div>
       </div>
-    </details>
-  </div>
 
-  <div id="view-pending" style="display:none;">
-    <div class="masthead">
-      <h1>待打掃／未合格區域</h1>
+      <div class="who-box" id="who-box"></div>
+      <div class="roster-strip" id="roster-strip"></div>
+      <div id="floors"></div>
+
+      <!--<details class="admin">
+        <summary>管理設定</summary>
+        <div class="admin-body" id="admin-body">
+          本週清潔工由系統於每週自動依書院成員重新抽選；每日的檢查結果每天自動重置。
+          <div>
+            <button id="reroll-btn" type="button">重新抽選本週清潔工</button>
+          </div>
+          <div id="admin-submissions"></div>
+        </div>
+      </details>-->
     </div>
-    <div id="pending-places-container"></div>
-  </div>
+    <p class="admin-tell">本週清潔工由系統於每週自動依書院成員重新抽選；每日的檢查結果每天自動重置。</p>
 
-  <div id="view-weekly" style="display:none;">
-    <div class="masthead">
-      <h1>本週打掃狀況</h1>
+    <div id="view-pending" style="display:none;">
+      <div class="masthead">
+        <h1>待打掃／未合格區域</h1>
+      </div>
+      <div id="pending-places-container"></div>
     </div>
-    <div id="weekly-matrix-container"></div>
+
+    <div id="view-weekly" style="display:none;">
+      <div class="masthead">
+        <h1>本週打掃狀況</h1>
+      </div>
+      <div id="weekly-matrix-container"></div>
+    </div>
   </div>
-</div>
 
-<div id="submit-area"></div>
+  <div id="submit-area"></div>
 
-<div class="sheet-backdrop" id="sheet-backdrop"></div>
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-title" id="sheet-title"></div>
-  <div class="sheet-options" id="sheet-options"></div>
-</div>
-<div class="footer-credits">
-  Designed & Developed by 竹北實中 <a href="https://jeremy-liaw.github.io/" target="_blank">Jeremy</a> & <a href="https://theoyu314159.github.io/" target="_blank">Yuyoru</a>
-</div>
-<div class="footer-credits">
-  對此網站有疑義？ 請發 Email 給我們：<a href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=DmwnWstpsHnlmBDmQDzHKXswZnfdhTvkTfGTxxcZFfVQXcgzJrbPdszCRcbSqlQNvCbtltPCNXDB" target="_blank">提供意見</a>
-</div>
-<script src="script.js"></script>
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-title"></div>
+    <div class="sheet-options" id="sheet-options"></div>
+  </div>
+  <div class="footer-credits">
+    Designed & Developed by 竹北實中 <a href="https://jeremy-liaw.github.io/" target="_blank">Jeremy</a> & <a
+      href="https://theoyu314159.github.io/" target="_blank">Yuyoru</a>
+  </div>
+  <div class="footer-credits">
+    對此網站有疑義？ 請發 Email 給我們：<a href="mailto:u11501066@uschool.hcc.edu.tw,u11501021@uschool.hcc.edu.tw"
+      target="_blank">提供意見</a>
+  </div>
+  <script src="script.js"></script>
 </body>
+
 </html>
