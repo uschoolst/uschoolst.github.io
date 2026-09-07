@@ -8,32 +8,50 @@ const BOOK_COLOR = {
 
 const DEFAULT_TASKS = {
   '1F': [
-    { label:'警衛室附近地板', book:'曦華書院' },
-    { label:'花圃維護', book:'曦華書院' },
-    { label:'走廊地板（靠共伴樞）', book:'曦華書院' },
-    { label:'花園', book:'曦華書院' },
-    { label:'火塘－地板', book:'靛織書院' },
-    { label:'火塘－桌子', book:'靛織書院' },
-    { label:'創客空間－地板', book:'靛織書院' },
-    { label:'創客空間－窗戶及桌椅', book:'靛織書院' },
-    { label:'性別友善廁所－洗手台', book:'曦華書院' },
-    { label:'性別友善廁所－馬桶', book:'曦華書院' },
-    { label:'性別友善廁所－地板', book:'曦華書院' },
-    { label:'無障礙廁所＋廁所走廊－地板', book:'曦華書院' },
-    { label:'無障礙廁所＋廁所走廊－刷馬桶、小便斗', book:'曦華書院' },
-    { label:'垃圾儲藏室（分類垃圾）', book:'靛織書院' },
-    { label:'一樓大廳－花圃維護', book:'曦華書院' },
-    { label:'一樓大廳－地板簡單清潔', book:'曦華書院' },
-    { label:'泮林－窗戶', book:'靛織書院' },
-    { label:'泮林－櫃子', book:'靛織書院' },
-    { label:'泮林－地板', book:'靛織書院' },
-    { label:'體育器材室（整理器材）', book:'靛織書院' },
-    { label:'一樓走廊－第一部分（掃拖）', book:'曦華書院' },
-    { label:'一樓走廊－第二部分（掃拖）', book:'曦華書院' },
-    { label:'一樓走廊－第三部分（掃拖）', book:'曦華書院' },
-    { label:'樓梯－共伴樞旁', book:'曦華書院' },
-    { label:'樓梯－廁所旁', book:'曦華書院' },
-    { label:'樓梯－通學樓梯（到 2F 空地）', book:'曦華書院' }
+    // --- 曦華書院 負責區域 ---
+    { label: '清潔工替補員', book: '曦華書院' },
+    { label: '廁所（1）', book: '曦華書院' },
+    { label: '廁所（2）', book: '曦華書院' },
+    { label: '廁所（3）', book: '曦華書院' },
+    { label: '廁所（4）', book: '曦華書院' },
+    { label: '泮林（1）', book: '曦華書院' },
+    { label: '泮林（2）', book: '曦華書院' },
+    { label: '泮林（3）', book: '曦華書院' },
+    { label: '泮林（4）', book: '曦華書院' },
+    { label: '泮林（5）', book: '曦華書院' },
+    { label: '泮林（6）', book: '曦華書院' },
+    { label: '泮林（7）', book: '曦華書院' },
+    { label: '創客空間（1）', book: '曦華書院' },
+    { label: '創客空間（2）', book: '曦華書院' },
+    { label: '垃圾回收室（1）', book: '曦華書院' },
+    { label: '垃圾回收室（2）', book: '曦華書院' },
+    { label: '垃圾回收室（3）', book: '曦華書院' },
+    { label: '火塘（1）', book: '曦華書院' },
+    { label: '火塘（2）', book: '曦華書院' },
+    { label: '火塘（3）', book: '曦華書院' },
+    { label: '火塘（4）', book: '曦華書院' },
+
+    // --- 靛織書院 負責區域 ---
+    { label: '木地板花園（1）', book: '靛織書院' },
+    { label: '木地板花園（2）', book: '靛織書院' },
+    { label: '體育器材室（1）', book: '靛織書院' },
+    { label: '體育器材室（2）', book: '靛織書院' },
+    { label: '走廊（1）', book: '靛織書院' },
+    { label: '走廊（2）', book: '靛織書院' },
+    { label: '走廊（3）', book: '靛織書院' },
+    { label: '走廊（4）', book: '靛織書院' },
+    { label: '走廊（5）', book: '靛織書院' },
+    { label: '走廊（6）', book: '靛織書院' },
+    { label: '走廊（7）', book: '靛織書院' },
+    { label: '警衛室旁', book: '靛織書院' },
+    { label: '小花園', book: '靛織書院' },
+    { label: '正門通學樓梯（1）', book: '靛織書院' },
+    { label: '正門通學樓梯（2）', book: '靛織書院' },
+    { label: '共伴樞旁樓梯（1）', book: '靛織書院' },
+    { label: '共伴樞旁樓梯（2）', book: '靛織書院' },
+    { label: '清潔工替代員', book: '靛織書院' },
+    { label: '性別廁所樓梯', book: '靛織書院' },
+    { label: '洗手台', book: '靛織書院' }
   ],
     '2F': [
     { label: '掃花圃、看情況拖地、澆水', book: '馭風書院' },
@@ -173,7 +191,10 @@ const REAL_ROSTER = {
 };
 function formatStudent(s){ return/* s.name + */ s.id; }
 function pickBookRepresentative(book){
-  return (book === '馭風書院') ? ['馭風固定員'] : formatStudent(pick(REAL_ROSTER[book]));
+  if (book === '馭風書院') return '馭風固定員';
+  if (book === '曦華書院') return '曦華固定員'; // ← 在這裡填寫曦華要顯示的名稱或代號
+  
+  return formatStudent(pick(REAL_ROSTER[book]));
 }
 
 function pad(n){ return String(n).padStart(2,'0'); }
