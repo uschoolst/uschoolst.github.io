@@ -142,7 +142,7 @@ let submissions = null;
 let selectedBook = null;
 let dataReady = false; // loadAll() 完成之前，pending/weekly 分頁不能拿資料來用
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyjtPuGK87ozDRf_sMzudIPVLgWZemYjEez5IpqzeOwGrruQavdc8BjHKppI9DYzm8/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj9cQvMaAFQ2BALDGdvXO8QH_7y-OpFa8ECkC9dQbsLEefnWZOC8Wf4XLEthyDmF0H/exec';
 
 async function loadAll(){
   tasksData = DEFAULT_TASKS;
