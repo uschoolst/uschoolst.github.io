@@ -1,3 +1,5 @@
+alert("我們新增了查看平面圖功能，歡迎多加利用(某些書院還在更改中請等)")
+
 const BOOKS = ['馭風書院','矽晶書院','曦華書院','靛織書院'];
 const BOOK_COLOR = {
   '馭風書院':'var(--book-wind)',
@@ -53,7 +55,7 @@ const DEFAULT_TASKS = {
     { label: '性別廁所樓梯', book: '靛織書院' },
     { label: '洗手台', book: '靛織書院' }
   ],
-    '2F': [
+  '2F': [
     { label: '掃花圃、看情況拖地、澆水', book: '馭風書院' },
     { label: '一般教室（左一）', book: '馭風書院' },
     { label: '一般教室（左二）', book: '馭風書院' },
@@ -74,27 +76,27 @@ const DEFAULT_TASKS = {
     { label: '音樂教室', book: '馭風書院' }
   ],
   '3F': [
-  { label: '一般教室（一）', book: '矽晶書院' },
-  { label: '一般教室（二）', book: '矽晶書院' },
-  { label: '一般教室（三）', book: '矽晶書院' },
-  { label: '一般教室（四）', book: '矽晶書院' },
-  { label: '廁所（一）', book: '矽晶書院' },
-  { label: '廁所（二）', book: '矽晶書院' },
-  { label: '廁所（三）', book: '矽晶書院' },
-  { label: '廁所（四）', book: '矽晶書院' },
-  { label: '廁所（五）', book: '矽晶書院' },
-  { label: '花圃＋收垃圾', book: '矽晶書院' },
-  { label: '走廊（一）', book: '矽晶書院' },
-  { label: '走廊（二）', book: '矽晶書院' },
-  { label: '走廊（三）', book: '矽晶書院' },
-  { label: '走廊（四）', book: '矽晶書院' },
-  { label: '走廊（五）', book: '矽晶書院' },
-  { label: '讀書室', book: '矽晶書院' },
-  { label: 'PBL研創', book: '矽晶書院' },
-  { label: '地科 生物教室', book: '矽晶書院' },
-  { label: '無界（美術教室）', book: '矽晶書院' },
-  { label: '清潔工', book: '矽晶書院' }
-]
+    { label: '一般教室（一）', book: '矽晶書院' },
+    { label: '一般教室（二）', book: '矽晶書院' },
+    { label: '一般教室（三）', book: '矽晶書院' },
+    { label: '一般教室（四）', book: '矽晶書院' },
+    { label: '廁所（一）', book: '矽晶書院' },
+    { label: '廁所（二）', book: '矽晶書院' },
+    { label: '廁所（三）', book: '矽晶書院' },
+    { label: '廁所（四）', book: '矽晶書院' },
+    { label: '廁所（五）', book: '矽晶書院' },
+    { label: '花圃＋收垃圾', book: '矽晶書院' },
+    { label: '走廊（一）', book: '矽晶書院' },
+    { label: '走廊（二）', book: '矽晶書院' },
+    { label: '走廊（三）', book: '矽晶書院' },
+    { label: '走廊（四）', book: '矽晶書院' },
+    { label: '走廊（五）', book: '矽晶書院' },
+    { label: '讀書室', book: '矽晶書院' },
+    { label: 'PBL研創', book: '矽晶書院' },
+    { label: '地科 生物教室', book: '矽晶書院' },
+    { label: '無界（美術教室）', book: '矽晶書院' },
+    { label: '清潔工', book: '矽晶書院' }
+  ]
 };
 const FLOOR_ORDER = ['1F','2F','3F'];
 
@@ -122,13 +124,13 @@ function monthKey(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1); }
 function dateKey(d){ return monthKey(d) + '-' + pad(d.getDate()); }
 function saturdayOf(d){
   const day = d.getDay(); // 0(日) ~ 6(六)
-  const WEEK_RESET_DAY = 6; // 跟 Code.gs 的 WEEK_RESET_DAY 保持一致，要改請兩邊一起改
+  const WEEK_RESET_DAY = 6; // 跟 Code.gs 的 WEEK_RESET_DAY 保持一致
   const distanceBack = (day - WEEK_RESET_DAY + 7) % 7;
   const resetDay = new Date(d);
   resetDay.setDate(d.getDate() - distanceBack);
   return resetDay;
 }
-function weekKey(d){ return dateKey(saturdayOf(d)); } // 用當週「週六」的日期當 key，例如 2026-09-05
+function weekKey(d){ return dateKey(saturdayOf(d)); } 
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
 const now = new Date();
@@ -140,17 +142,43 @@ let inspectorData = null;
 let checklistData = null;
 let submissions = null;
 let selectedBook = null;
-let dataReady = false; // loadAll() 完成之前，pending/weekly 分頁不能拿資料來用
+let dataReady = false; 
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj9cQvMaAFQ2BALDGdvXO8QH_7y-OpFa8ECkC9dQbsLEefnWZOC8Wf4XLEthyDmF0H/exec';
+
+// 平面圖網址設定
+const MAP_IMAGES = {
+  '馭風書院': 'https://i.meee.com.tw/kkoz18z.webp',
+  '矽晶書院': 'https://i.meee.com.tw/tBAkUG7.png',
+  '曦華書院': 'https://i.meee.com.tw/mFPz7qQ.png',
+  '靛織書院': 'YOUR_INDIGO_MAP_URL.png'
+};
+
+// 開啟對應書院平面圖
+function openMapModal(houseName) {
+  const modal = document.getElementById('house-map-modal');
+  const title = document.getElementById('map-modal-title');
+  const img = document.getElementById('house-map-img');
+  
+  if (modal && MAP_IMAGES[houseName]) {
+    title.innerText = houseName + ' 打掃區域平面圖';
+    img.src = MAP_IMAGES[houseName];
+    modal.style.display = 'flex';
+  } else if (!MAP_IMAGES[houseName] || MAP_IMAGES[houseName].startsWith('YOUR_')) {
+    alert('該書院尚未設定平面圖網址！');
+  }
+}
+
+// 關閉平面圖
+function closeMapModal() {
+  const modal = document.getElementById('house-map-modal');
+  if (modal) modal.style.display = 'none';
+}
 
 async function loadAll(){
   tasksData = DEFAULT_TASKS;
   const kv = await fetchDump();
 
-  // 本週清潔工名單只由後端 weeklyRotatePasswordAndAssignCleaners() 產生（同時會寄出通知信）。
-  // 前端不再自己隨機生一份、也不會寫回資料庫——避免跟後端的抽選/寄信流程互相打架，
-  // 或是在後端還沒抽選之前，被前端先蓋掉一份假名單。
   inspectorData = kv['inspectors:'+WKEY] ? JSON.parse(kv['inspectors:'+WKEY]) : null;
   checklistData = kv['checklist:'+DKEY] ? JSON.parse(kv['checklist:'+DKEY]) : {};
   submissions = kv['submissions:'+DKEY] ? JSON.parse(kv['submissions:'+DKEY]) : {};
@@ -210,7 +238,7 @@ function closeSheet(){
   sheetBackdrop.classList.remove('show');
   sheetEl.classList.remove('show');
 }
-sheetBackdrop.addEventListener('click', closeSheet);
+if (sheetBackdrop) sheetBackdrop.addEventListener('click', closeSheet);
 
 /* 頁籤切換邏輯 */
 function switchTab(tabName) {
@@ -229,7 +257,6 @@ function switchTab(tabName) {
   if (submitArea) {
     submitArea.style.display = (tabName === 'check') ? 'block' : 'none';
   }
-  // 非「打掃檢查」分頁時，送出按鈕被藏起來了，底部就不用留那塊空白
   document.querySelector('.board').classList.toggle('no-submit-pad', tabName !== 'check');
 
   if (tabName === 'pending') {
@@ -284,8 +311,6 @@ function render(){
   document.getElementById('today-label').textContent =
     now.toLocaleDateString('zh-TW', { month:'long', day:'numeric', weekday:'short' });
 
-  // 本週清潔工名單要等後端的每週排程跑過才會有（同時會寄出通知信）。
-  // 還沒有的話先顯示等待訊息，不要繼續往下跑，避免 inspectorData[...] 噴錯。
   if(!inspectorData){
     document.getElementById('who-box').innerHTML =
       '<div class="empty-hint">本週清潔工名單尚未公布，請稍後再試（通常每週一凌晨會自動產生並寄信通知）。</div>';
@@ -303,8 +328,12 @@ function render(){
   BOOKS.forEach(book=>{
     const chip = document.createElement('div');
     chip.className = 'roster-chip';
+    chip.style.cursor = 'pointer';
+    chip.title = '點擊檢視平面圖';
+    chip.onclick = () => openMapModal(book);
     chip.innerHTML = `<span class="swatch" style="background:${BOOK_COLOR[book]}"></span>
-      <b>${book}</b><span class="who">${inspectorData[book] || '未定'}</span>`;
+      <b>${book}</b><span class="who">${inspectorData[book] || '未定'}</span>
+      <span style="font-size:11px; color:#666; margin-left:4px;">🗺️</span>`;
     stripEl.appendChild(chip);
   });
 
@@ -336,14 +365,19 @@ function render(){
     card.className = 'floor';
 
     card.innerHTML = `
-      <div class="floor-head">
-        <div class="floor-num">${floor}</div>
-        <div class="floor-meta">
-          <div class="tags">
-            <span class="book-tag" style="background:${BOOK_COLOR[selectedBook]}"><span class="swatch"></span>${selectedBook}</span>
+      <div class="floor-head" style="flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="floor-num">${floor}</div>
+          <div class="floor-meta">
+            <div class="tags">
+              <span class="book-tag" style="background:${BOOK_COLOR[selectedBook]}"><span class="swatch"></span>${selectedBook}</span>
+            </div>
+            <div class="progress-line"><strong>${doneCount}</strong> / ${items.length} 項達到合格以上</div>
           </div>
-          <div class="progress-line"><strong>${doneCount}</strong> / ${items.length} 項達到合格以上</div>
         </div>
+        <button type="button" class="btn-map-single" onclick="openMapModal('${selectedBook}')" style="margin-left:auto; background:#f0f4f8; border:1px solid #cbd5e1; padding:6px 12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer;">
+          🗺️ 查看 ${selectedBook} 平面圖
+        </button>
       </div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="task-list">
@@ -452,7 +486,7 @@ function render(){
 
 function renderAdminSubmissions(){
   const el = document.getElementById('admin-submissions');
-  if(!el) return; // 管理面板目前沒有顯示在頁面上（index.html 裡被註解掉了），沒有這個元素很正常
+  if(!el) return;
   el.innerHTML = BOOKS.map(book=>{
     const sub = submissions[book];
     const status = sub ? `已於 ${pad(new Date(sub).getHours())}:${pad(new Date(sub).getMinutes())} 送出` : '尚未送出';
@@ -553,17 +587,13 @@ async function renderWeeklyMatrix() {
 
   const latestKV = await fetchDump();
 
-  // 1. 計算當週「週一」的日期
   const today = new Date();
-  const dayOfWeek = today.getDay(); // 0(日), 1(一), 2(二), ..., 6(六)
-
-  // 計算距離本週一相差幾天（如果今天是週日 0，則當週一為 6 天前）
+  const dayOfWeek = today.getDay(); 
   const distanceToMonday = (dayOfWeek === 0) ? -6 : 1 - dayOfWeek;
 
   const monday = new Date(today);
   monday.setDate(today.getDate() + distanceToMonday);
 
-  // 2. 依序產生當週 週一至週五 的 5 天日期
   const pastDays = [];
   const weekDays = ['一', '二', '三', '四', '五'];
 
@@ -647,7 +677,7 @@ async function startApp(){
   render();
 }
 
-/* ---------- 密碼確認（送出時才會彈出，其他人可以自由瀏覽） ---------- */
+/* ---------- 密碼確認 ---------- */
 async function verifyPassword_(password){
   try{
     const res = await fetch(APPS_SCRIPT_URL + '?action=checkPassword&password=' + encodeURIComponent(password));
@@ -659,7 +689,6 @@ async function verifyPassword_(password){
   }
 }
 
-// opts: { title, sub, confirmLabel, onSuccess, onCancel }
 function showPasswordGate(opts){
   const gate = document.getElementById('pw-gate');
   const input = document.getElementById('pw-input');
@@ -715,4 +744,4 @@ function showPasswordGate(opts){
   input.focus();
 }
 
-startApp(); // 大家都可以直接瀏覽，不用先輸入密碼
+startApp();

@@ -41,17 +41,6 @@
       <div class="who-box" id="who-box"></div>
       <div class="roster-strip" id="roster-strip"></div>
       <div id="floors"></div>
-
-      <!--<details class="admin">
-        <summary>管理設定</summary>
-        <div class="admin-body" id="admin-body">
-          本週清潔工由系統於每週自動依書院成員重新抽選；每日的檢查結果每天自動重置。
-          <div>
-            <button id="reroll-btn" type="button">重新抽選本週清潔工</button>
-          </div>
-          <div id="admin-submissions"></div>
-        </div>
-      </details>-->
     </div>
     <p class="admin-tell">本週清潔工由系統於每週自動依書院成員重新抽選；每日的檢查結果每天自動重置。</p>
 
@@ -72,20 +61,34 @@
 
   <div id="submit-area"></div>
 
+  <!-- 四個書院通用平面圖彈出視窗 Modal -->
+  <div class="map-modal" id="house-map-modal" style="display:none;">
+    <div class="map-modal-backdrop" onclick="closeMapModal()"></div>
+    <div class="map-modal-content">
+      <div class="map-modal-header">
+        <h3 id="map-modal-title">打掃區域平面圖</h3>
+        <button type="button" class="map-modal-close" onclick="closeMapModal()">✕</button>
+      </div>
+      <div class="map-modal-body">
+        <img src="" alt="打掃區域平面圖" id="house-map-img">
+      </div>
+    </div>
+  </div>
+
   <div class="sheet-backdrop" id="sheet-backdrop"></div>
   <div class="sheet" id="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title" id="sheet-title"></div>
     <div class="sheet-options" id="sheet-options"></div>
   </div>
+
   <div class="footer-credits">
-    Designed & Developed by <a href="https://uschool.hcc.edu.tw/" target="_blank">竹北實中</a> <a href="https://jeremy-liaw.github.io/" target="_blank">Jeremy</a> & <a
-      href="https://theoyu314159.github.io/" target="_blank">Yuyoru</a>
+    Designed & Developed by <a href="https://uschool.hcc.edu.tw/" target="_blank">竹北實中</a> <a href="https://jeremy-liaw.github.io/" target="_blank">Jeremy</a> & <a href="https://theoyu314159.github.io/" target="_blank">Yuyoru</a>
   </div>
   <div class="footer-credits">
-    對此網站有疑義？ 請發 Email 給我們：<a href="mailto:u11501066@uschool.hcc.edu.tw,u11501021@uschool.hcc.edu.tw"
-      target="_blank">提供意見</a>
+    對此網站有疑義？ 請發 Email 給我們：<a href="mailto:u11501066@uschool.hcc.edu.tw,u11501021@uschool.hcc.edu.tw" target="_blank">提供意見</a>
   </div>
+
   <script src="script.js"></script>
 </body>
 
