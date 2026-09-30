@@ -149,7 +149,7 @@ const MAP_IMAGES = {
   '馭風書院': 'https://i.meee.com.tw/kkoz18z.webp',
   '矽晶書院': 'https://i.meee.com.tw/tBAkUG7.png',
   '曦華書院': 'https://i.meee.com.tw/mFPz7qQ.png',
-  '靛織書院': 'YOUR_INDIGO_MAP_URL.png'
+  '靛織書院': 'https://i.meee.com.tw/tiCPqqi.png'
 };
 
 // 開啟對應書院平面圖
